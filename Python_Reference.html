@@ -1,0 +1,593 @@
+<pl-question-panel>
+<style>
+  .pyref details { border: 1px solid #dee2e6; border-radius: 4px; margin-bottom: 8px; padding: 4px 12px; }
+  .pyref summary { font-weight: 600; cursor: pointer; padding: 4px 0; }
+  .pyref pre { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 8px; font-size: 0.9em; }
+  .pyref h6 { margin-top: 12px; font-weight: 600; }
+  .pyref table { font-size: 0.9em; margin-bottom: 8px; }
+  .pyref td, .pyref th { padding: 2px 12px 2px 0; vertical-align: top; }
+</style>
+<div class="pyref">
+<p>
+  <strong>Python reference (0 points).</strong> This page is here for you to consult during the quiz;
+  there is nothing to submit. Each section explains one part of the language and shows short
+  examples. Click a section to expand it, and use your browser's find (Ctrl/Cmd + F) to search
+  inside an open section.
+</p>
+
+<details>
+<summary>1. Numbers and arithmetic</summary>
+<p>
+  Python has two main kinds of numbers: <em>integers</em> (<code>int</code>), which are whole numbers
+  of any size, and <em>floating-point numbers</em> (<code>float</code>), which have a decimal point.
+  Integers never overflow in Python, so you can compute very large values exactly.
+</p>
+<p>
+  There are two kinds of division. The <code>/</code> operator always produces a float, even when the
+  result is a whole number. The <code>//</code> operator performs <em>floor division</em>: it divides and
+  rounds down to an integer. The <code>%</code> operator gives the <em>remainder</em> after division,
+  which makes it the standard way to test divisibility: <code>n % k == 0</code> is true exactly when
+  <code>k</code> divides <code>n</code> evenly. Exponentiation uses <code>**</code>.
+</p>
+<pre>7 / 2        # 3.5
+6 / 2        # 3.0   (still a float)
+7 // 2       # 3
+7 % 2        # 1     (so 7 is odd)
+10 % 5 == 0  # True  (5 divides 10)
+2 ** 10      # 1024</pre>
+<p>
+  Comparisons (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>,
+  <code>&gt;=</code>) produce <code>True</code> or <code>False</code>, and can be chained, so
+  <code>0 &lt;= x &lt; 10</code> checks that <code>x</code> lies in a range. Combine conditions with
+  <code>and</code>, <code>or</code> and <code>not</code>. Note that <code>=</code> assigns a value while
+  <code>==</code> tests equality.
+</p>
+<p>
+  To convert between types, call the type as a function: <code>int("42")</code> turns text into an
+  integer, <code>float("3.5")</code> into a float, and <code>str(10)</code> turns a number into text.
+  <code>round(x, n)</code> rounds to <code>n</code> decimal places, and <code>abs(x)</code> gives the
+  absolute value. Shorthand operators such as <code>x += 1</code> update a variable in place
+  (also <code>-=</code>, <code>*=</code>, <code>//=</code> and so on).
+</p>
+<h6>The math module</h6>
+<p>
+  More mathematical functions live in the <code>math</code> module, which you import once at the top
+  of your program.
+</p>
+<pre>import math
+math.sqrt(16)          # 4.0   (square root, as a float)
+math.isqrt(17)         # 4     (integer square root, rounded down)
+math.floor(2.7)        # 2
+math.ceil(2.1)         # 3
+math.gcd(12, 18)       # 6     (greatest common divisor)
+math.prod([2, 3, 4])   # 24    (product of a sequence)
+math.inf               # a value larger than any number</pre>
+</details>
+
+<details>
+<summary>2. Strings</summary>
+<p>
+  A string is a sequence of characters, written in single or double quotes. You can find its length
+  with <code>len</code>, look up individual characters by position, and loop over its characters with
+  <code>for ch in s:</code>. Positions (<em>indexes</em>) start at 0; negative indexes count from the
+  end, so <code>s[-1]</code> is the last character.
+</p>
+<p>
+  A <em>slice</em> <code>s[start:end]</code> extracts part of a string. The start position is included
+  and the end position is excluded, so <code>s[1:4]</code> has three characters. Either end can be
+  omitted to mean "from the beginning" or "to the end". A third number sets the step, and a step of
+  <code>-1</code> walks backwards, which reverses the string.
+</p>
+<pre>s = "hello world"
+len(s)          # 11
+s[0], s[-1]     # 'h', 'd'
+s[1:4]          # 'ell'
+s[:5], s[6:]    # 'hello', 'world'
+s[::-1]         # 'dlrow olleh'</pre>
+<p>
+  Strings are <em>immutable</em>: you cannot change one in place. Methods such as <code>upper</code>
+  or <code>replace</code> return a new string and leave the original unchanged, so remember to use
+  or store the result. The <code>in</code> operator tests whether one string appears inside another.
+</p>
+<pre>"lo" in s                 # True
+s.upper(), s.lower()      # 'HELLO WORLD', 'hello world'
+s.startswith("he")        # True
+s.endswith("ld")          # True
+s.find("o")               # 4   (position of the first match, or -1)
+s.count("o")              # 2
+s.replace("o", "0")       # 'hell0 w0rld'
+"  hi\n".strip()          # 'hi'  (removes surrounding whitespace)
+"abc".isalpha()           # True (all letters)
+"123".isdigit()           # True (all digits)</pre>
+<h6>Splitting and joining</h6>
+<p>
+  <code>split</code> breaks a string into a list of pieces. With no argument it splits on any run
+  of whitespace (spaces, tabs, newlines), which is the usual way to separate words or numbers on a
+  line. Give it a separator to split on something else. <code>join</code> does the reverse: it is
+  called on the separator and glues a list of strings together.
+</p>
+<pre>"one two  three".split()     # ['one', 'two', 'three']
+"a,b,c".split(",")           # ['a', 'b', 'c']
+"-".join(["a", "b", "c"])    # 'a-b-c'</pre>
+<h6>Formatting output</h6>
+<p>
+  An <em>f-string</em> (a string with an <code>f</code> before the opening quote) lets you insert
+  values directly into text by writing expressions inside braces. A format code after a colon
+  controls how a number is shown.
+</p>
+<pre>name, n = "Ann", 3
+f"{name} has {n} items"   # 'Ann has 3 items'
+f"{3.14159:.2f}"          # '3.14'       (two decimal places)
+f"{1234567:,}"            # '1,234,567'  (thousands separators)</pre>
+</details>
+
+<details>
+<summary>3. Lists and tuples</summary>
+<p>
+  A list holds an ordered collection of values, written in square brackets. Lists use the same
+  indexing and slicing rules as strings, but unlike strings they are <em>mutable</em>: you can add,
+  remove and change items. Lists can hold any mix of values, including other lists.
+</p>
+<pre>xs = [3, 1, 4, 1, 5]
+xs[0], xs[-1]      # 3, 5
+xs[1:3]            # [1, 4]
+xs[0] = 9          # replace an item
+len(xs), sum(xs), min(xs), max(xs)</pre>
+<p>
+  The most common way to build a list is to start with an empty list and <code>append</code> items
+  one at a time inside a loop. Other methods insert, remove or search for items. Note that
+  <code>xs.sort()</code> sorts the list <em>in place</em> and returns <code>None</code>, whereas the
+  built-in function <code>sorted(xs)</code> returns a new sorted list and leaves the original alone.
+</p>
+<pre>result = []
+for x in xs:
+    result.append(x * 10)
+
+xs.extend([2, 6])      # add several items to the end
+xs.insert(0, 7)        # insert 7 at position 0
+xs.pop()               # remove and return the last item
+xs.remove(1)           # remove the first occurrence of 1
+xs.index(4)            # position of the first 4
+xs.count(1)            # how many times 1 appears
+xs.sort()              # sort in place
+sorted(xs, reverse=True)     # new list, largest first
+sorted(words, key=len)       # new list, ordered by length</pre>
+<p>
+  A list of lists represents a table: <code>grid[r]</code> is a row and <code>grid[r][c]</code> a
+  single cell. <code>[0] * 3</code> creates a list of three zeros.
+</p>
+<h6>Tuples</h6>
+<p>
+  A tuple is like a list but immutable, written with parentheses. Tuples are often used to group a
+  few related values. <em>Unpacking</em> assigns the parts of a tuple (or list) to separate
+  variables in one step, which also gives a neat way to swap two variables.
+</p>
+<pre>point = (3, 4)
+x, y = point      # x is 3, y is 4
+a, b = b, a       # swap a and b</pre>
+</details>
+
+<details>
+<summary>4. Conditions and loops</summary>
+<p>
+  Python uses <em>indentation</em> to group statements: everything indented under an
+  <code>if</code>, <code>for</code>, <code>while</code> or <code>def</code> line belongs to it. Use a
+  consistent indent (four spaces is standard). An <code>if</code> statement can be followed by any
+  number of <code>elif</code> branches and an optional <code>else</code>; the first branch whose
+  condition is true runs.
+</p>
+<pre>if x &gt; 0:
+    print("positive")
+elif x == 0:
+    print("zero")
+else:
+    print("negative")</pre>
+<h6>for loops</h6>
+<p>
+  A <code>for</code> loop runs once for each item in a sequence such as a list, a string, the lines
+  of a file, or a <code>range</code>. <code>range(stop)</code> counts from 0 up to but not including
+  <code>stop</code>; <code>range(start, stop, step)</code> lets you choose the start and step, and a
+  negative step counts down.
+</p>
+<pre>for i in range(5):           # 0, 1, 2, 3, 4
+for i in range(2, 10, 3):    # 2, 5, 8
+for i in range(10, 0, -1):   # 10, 9, ..., 1
+for ch in "abc":             # 'a', 'b', 'c'</pre>
+<p>
+  When you need both the position and the item, use <code>enumerate</code>. To walk through two
+  sequences side by side, use <code>zip</code>, which stops at the end of the shorter one.
+</p>
+<pre>for i, name in enumerate(["a", "b"]):   # (0, 'a'), (1, 'b')
+    print(i, name)
+for x, y in zip([1, 2], [10, 20]):      # (1, 10), (2, 20)
+    print(x + y)</pre>
+<h6>while loops</h6>
+<p>
+  A <code>while</code> loop repeats as long as its condition stays true. It is the natural choice
+  when you do not know in advance how many steps you need, for example when you keep going until a
+  value passes some limit. Make sure something inside the loop eventually makes the condition
+  false, or the loop will run forever.
+</p>
+<pre>n = 1
+while n &lt; 1000:
+    n = n * 2
+print(n)   # 1024</pre>
+<p>
+  Inside either kind of loop, <code>break</code> leaves the loop immediately and
+  <code>continue</code> skips the rest of the current pass and moves on to the next one. A loop may
+  also have an <code>else</code> block, which runs only if the loop ended without hitting
+  <code>break</code>; this is handy for "search, and do something if nothing was found".
+</p>
+</details>
+
+<details>
+<summary>5. Comprehensions</summary>
+<p>
+  A <em>list comprehension</em> builds a new list from an existing sequence in a single expression.
+  It reads like a sentence: "the value, for each item in the sequence, if a condition holds". It is
+  equivalent to an empty list plus a loop that appends, but shorter and usually clearer.
+</p>
+<pre>nums = [1, 2, 3, 4, 5, 6]
+[x * x for x in nums]            # [1, 4, 9, 16, 25, 36]
+[x for x in nums if x % 2 == 0]  # [2, 4, 6]  (keep only even numbers)
+
+# the same as the second comprehension, written as a loop:
+evens = []
+for x in nums:
+    if x % 2 == 0:
+        evens.append(x)</pre>
+<p>
+  You can combine several conditions with <code>and</code>/<code>or</code>, use a conditional
+  expression to choose between two values, and include more than one <code>for</code> clause
+  (the first one is the outer loop). The same syntax with braces builds a set or a dictionary, and
+  with no brackets at all inside a function call it produces values one at a time, which works well
+  with <code>sum</code>, <code>min</code>, <code>max</code>, <code>any</code> and <code>all</code>.
+</p>
+<pre>["big" if x &gt; 3 else "small" for x in nums]
+[(i, j) for i in range(2) for j in range(3)]   # 6 pairs
+{w: len(w) for w in ["hi", "hello"]}          # {'hi': 2, 'hello': 5}
+sum(x * x for x in nums)                       # 91</pre>
+</details>
+
+<details>
+<summary>6. Dictionaries, sets and counting</summary>
+<p>
+  A <em>dictionary</em> maps keys to values, like a lookup table. Keys are usually strings or
+  numbers and must be unique; looking up a key is fast no matter how large the dictionary is.
+  Reading a key that is not present raises a <code>KeyError</code>, so use <code>get</code> with a
+  default when a key might be missing. Looping over a dictionary gives its keys; use
+  <code>items()</code> to get key–value pairs.
+</p>
+<pre>ages = {"ann": 20, "bob": 22}
+ages["cat"] = 19          # add a new key (or update an existing one)
+ages["ann"]               # 20
+ages.get("dan", 0)        # 0  (default because "dan" is missing)
+"bob" in ages             # True  (tests the keys)
+for name, age in ages.items():
+    print(name, age)
+max(ages, key=ages.get)   # the key with the largest value: 'bob'</pre>
+<p>
+  A common pattern is counting: start each count at zero the first time you see a key, then add
+  one. The <code>Counter</code> class in the <code>collections</code> module does this for you, and
+  <code>defaultdict</code> creates a starting value automatically for missing keys.
+</p>
+<pre>counts = {}
+for w in ["a", "b", "a"]:
+    counts[w] = counts.get(w, 0) + 1     # {'a': 2, 'b': 1}
+
+from collections import Counter, defaultdict
+Counter("banana")                   # Counter({'a': 3, 'n': 2, 'b': 1})
+Counter("banana").most_common(1)    # [('a', 3)]
+groups = defaultdict(list)
+groups["x"].append(1)               # no need to create the list first</pre>
+<h6>Sets</h6>
+<p>
+  A <em>set</em> is an unordered collection with no duplicates. Converting a sequence to a set
+  removes repeats, so <code>len(set(xs))</code> counts the distinct values. Sets support fast
+  membership tests and the usual set operations.
+</p>
+<pre>s = set("banana")     # {'b', 'a', 'n'}
+s.add("z")
+a = {1, 2, 3}; b = {2, 3, 4}
+a | b                 # {1, 2, 3, 4}  union
+a &amp; b                 # {2, 3}        intersection
+a - b                 # {1}           difference</pre>
+</details>
+
+<details>
+<summary>7. Reading and writing files</summary>
+<p>
+  <code>open</code> opens a file by name. Use it in a <code>with</code> statement, which closes the
+  file automatically when the indented block ends. In the quiz, data files are in the same
+  directory as your program, so the plain file name is enough.
+</p>
+<p>
+  There are three common ways to read a text file. <code>f.read()</code> returns the whole file as
+  one string. <code>f.read().splitlines()</code> returns a list of lines without their line-ending
+  characters. Looping with <code>for line in f:</code> reads one line at a time; each line then
+  still ends with <code>"\n"</code>, so call <code>strip()</code> before using it.
+</p>
+<pre>with open("words.txt") as f:
+    text = f.read()                  # one string
+
+with open("words.txt") as f:
+    lines = f.read().splitlines()    # list of lines
+
+with open("words.txt") as f:
+    for line in f:
+        word = line.strip()          # remove the trailing newline
+        print(word)</pre>
+<p>
+  Everything read from a file is text. To work with numbers, split each line into pieces and
+  convert each piece with <code>int</code> or <code>float</code>. A comprehension does this neatly.
+</p>
+<pre>line = "3 7 12"
+nums = [int(x) for x in line.split()]    # [3, 7, 12]
+"4,5,6".split(",")                       # use a separator for comma-separated data</pre>
+<p>
+  To write a file, open it with mode <code>"w"</code> (which replaces any existing contents) and
+  call <code>write</code>; unlike <code>print</code>, it does not add a newline for you.
+</p>
+<pre>with open("out.txt", "w") as f:
+    f.write("first line\n")</pre>
+</details>
+
+<details>
+<summary>8. Functions</summary>
+<p>
+  A function packages a piece of code under a name so you can reuse it. Define it with
+  <code>def</code>, list its parameters in parentheses, and use <code>return</code> to send a result
+  back to the caller. A function without a <code>return</code> statement returns <code>None</code>.
+  Parameters can have default values, and callers can pass arguments by name.
+</p>
+<pre>def area(width, height=1):
+    return width * height
+
+area(3)                    # 3
+area(3, 4)                 # 12
+area(width=3, height=4)    # 12</pre>
+<p>
+  Writing a small helper function that answers one yes/no question (returning <code>True</code> or
+  <code>False</code>) often makes a program easier to read and test. A function can return several
+  values at once by returning a tuple, which the caller can unpack.
+</p>
+<pre>def is_even(n):
+    return n % 2 == 0
+
+def lowest_and_highest(values):
+    return min(values), max(values)
+
+lo, hi = lowest_and_highest([3, 1, 4])   # 1, 4</pre>
+<p>
+  A <code>lambda</code> is a small unnamed function written in one expression. It is mostly used as
+  the <code>key</code> argument to <code>sorted</code>, <code>min</code> and <code>max</code>, which
+  tells them what to compare.
+</p>
+<pre>pairs = [("a", 3), ("b", 1)]
+sorted(pairs, key=lambda p: p[1])    # [('b', 1), ('a', 3)]</pre>
+</details>
+
+<details>
+<summary>9. Useful built-in functions</summary>
+<p>These functions are always available without an import.</p>
+<table>
+<tr><td><code>print(a, b, sep=", ", end="")</code></td><td>Prints values separated by <code>sep</code> (a space by default) and followed by <code>end</code> (a newline by default). Printing a list shows it in brackets, e.g. <code>[1, 2]</code>.</td></tr>
+<tr><td><code>len(x)</code></td><td>Number of items in a string, list, set or dictionary.</td></tr>
+<tr><td><code>sum</code>, <code>min</code>, <code>max</code></td><td>Total, smallest and largest item. <code>min</code> and <code>max</code> accept <code>key=</code> to compare by something else, and <code>default=</code> for an empty sequence.</td></tr>
+<tr><td><code>sorted(x, key=..., reverse=...)</code></td><td>Returns a new sorted list.</td></tr>
+<tr><td><code>range(start, stop, step)</code></td><td>A sequence of integers; <code>stop</code> is not included.</td></tr>
+<tr><td><code>enumerate(x)</code>, <code>zip(a, b)</code></td><td>Index–item pairs; items from two sequences side by side. <code>zip(*rows)</code> turns a list of rows into columns.</td></tr>
+<tr><td><code>any(x)</code>, <code>all(x)</code></td><td>True if at least one item / every item is true.</td></tr>
+<tr><td><code>list</code>, <code>tuple</code>, <code>set</code>, <code>dict</code></td><td>Create an empty collection or convert another sequence.</td></tr>
+<tr><td><code>map(f, x)</code>, <code>filter(f, x)</code></td><td>Apply <code>f</code> to every item / keep the items for which <code>f</code> is true. Wrap in <code>list()</code> to see the result.</td></tr>
+<tr><td><code>divmod(a, b)</code></td><td>Quotient and remainder together: <code>divmod(7, 2)</code> is <code>(3, 1)</code>.</td></tr>
+<tr><td><code>type(x)</code>, <code>isinstance(x, int)</code></td><td>Check what kind of value you have.</td></tr>
+</table>
+</details>
+
+<details>
+<summary>10. Iterators and generators</summary>
+<p>
+  An <em>iterable</em> is anything a <code>for</code> loop can walk through: lists, strings, ranges,
+  dictionaries, files and more. Behind the scenes, the loop asks the iterable for an
+  <em>iterator</em>, an object that hands out one item at a time and remembers where it is. You can
+  do the same by hand with <code>iter</code> and <code>next</code>; when there are no items left,
+  <code>next</code> raises <code>StopIteration</code>, which is how a <code>for</code> loop knows to stop.
+</p>
+<pre>it = iter(["a", "b"])
+next(it)      # 'a'
+next(it)      # 'b'
+next(it)      # raises StopIteration
+next(it, None)   # a default instead of an error when exhausted</pre>
+<p>
+  An iterator can only be used once: after it has been run to the end it stays empty. If you need
+  the values again, store them in a list with <code>list(...)</code>.
+</p>
+<h6>Generator functions</h6>
+<p>
+  A <em>generator function</em> is an easy way to write your own iterator. It looks like an ordinary
+  function but uses <code>yield</code> instead of <code>return</code>. Calling it does not run the
+  body; it returns a generator. Each time the generator is asked for a value, the function runs until
+  the next <code>yield</code>, hands that value out, and pauses there, keeping all its local variables,
+  until the next value is requested. When the function ends, the generator is exhausted.
+</p>
+<pre>def countdown(n):
+    while n &gt; 0:
+        yield n
+        n -= 1
+
+for x in countdown(3):
+    print(x)            # 3, 2, 1
+list(countdown(4))      # [4, 3, 2, 1]</pre>
+<p>
+  Because values are produced only when needed, a generator can describe a very long or even
+  endless sequence without storing it in memory. Just make sure the code that consumes an endless
+  generator stops, for example with <code>break</code>.
+</p>
+<pre>def squares():
+    n = 1
+    while True:          # endless
+        yield n * n
+        n += 1
+
+for sq in squares():
+    if sq &gt; 50:
+        break
+    print(sq)            # 1, 4, 9, 16, 25, 36, 49</pre>
+<h6>Generator expressions</h6>
+<p>
+  A generator expression is a comprehension written with parentheses instead of square brackets.
+  It produces its values lazily, one at a time, instead of building a list first. Inside a function
+  call you can leave out the extra parentheses.
+</p>
+<pre>gen = (x * x for x in range(5))
+sum(gen)                           # 30
+max(len(w) for w in ["hi", "hello"])   # 5</pre>
+<h6>The itertools module</h6>
+<p>
+  The <code>itertools</code> module has building blocks for working with iterators.
+</p>
+<pre>import itertools
+itertools.count(10)                  # 10, 11, 12, ... forever
+itertools.islice(squares(), 3)       # the first 3 values: 1, 4, 9
+itertools.takewhile(lambda x: x &lt; 20, squares())   # 1, 4, 9, 16
+itertools.chain([1, 2], [3])         # 1, 2, 3
+itertools.combinations("abc", 2)     # ('a','b'), ('a','c'), ('b','c')
+itertools.permutations("ab")         # ('a','b'), ('b','a')</pre>
+<p>These return iterators; wrap them in <code>list(...)</code> to see all the values at once.</p>
+</details>
+
+<details>
+<summary>11. Decorators</summary>
+<p>
+  In Python, functions are values: you can store them in variables, pass them to other functions,
+  and return them from functions. A <em>decorator</em> uses this to wrap extra behaviour around a
+  function without changing its code. A decorator is a function that takes a function and returns a
+  new function, usually one that does something before and/or after calling the original.
+</p>
+<pre>def shout(func):
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        return result.upper()
+    return wrapper
+
+@shout
+def greet(name):
+    return "hello " + name
+
+greet("ann")      # 'HELLO ANN'</pre>
+<p>
+  Writing <code>@shout</code> above the definition is shorthand for <code>greet = shout(greet)</code>:
+  the name <code>greet</code> now refers to the wrapper. The wrapper uses <code>*args</code> and
+  <code>**kwargs</code> to accept whatever arguments the original function takes and pass them
+  through unchanged.
+</p>
+<p>
+  A decorator that takes its own arguments needs one more layer: an outer function that receives
+  the arguments and returns the actual decorator.
+</p>
+<pre>def repeat(times):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(times):
+                func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+@repeat(2)
+def hi():
+    print("hi")
+
+hi()      # prints "hi" twice</pre>
+<p>
+  Python also has useful built-in decorators. <code>functools.cache</code> remembers the results of
+  earlier calls so a function never computes the same answer twice, which can make recursive
+  functions dramatically faster. <code>functools.wraps</code>, used inside a decorator, keeps the
+  original function's name and documentation on the wrapper.
+</p>
+<pre>from functools import cache
+
+@cache
+def slow_square(n):
+    print("computing", n)
+    return n * n
+
+slow_square(4)    # prints "computing 4", returns 16
+slow_square(4)    # returns 16 straight from the cache</pre>
+</details>
+
+<details>
+<summary>12. reduce</summary>
+<p>
+  <code>reduce</code>, from the <code>functools</code> module, combines all the items of a sequence
+  into a single value by applying a two-argument function over and over. It starts with the first
+  two items, then combines that result with the third item, and so on, like a running total.
+</p>
+<pre>from functools import reduce
+
+reduce(lambda a, b: a + b, [1, 2, 3, 4])    # ((1 + 2) + 3) + 4 = 10
+reduce(lambda a, b: a * b, [1, 2, 3, 4])    # 24
+reduce(lambda a, b: a if a &gt; b else b, [3, 9, 2])   # 9</pre>
+<p>
+  An optional third argument gives a starting value. It is used as the first "running result", and
+  it is also what <code>reduce</code> returns for an empty sequence (without it, an empty sequence
+  raises a <code>TypeError</code>).
+</p>
+<pre>reduce(lambda a, b: a + b, [], 0)             # 0
+reduce(lambda acc, w: acc + len(w), ["hi", "hey"], 0)   # 5</pre>
+<p>
+  For common cases a built-in is simpler: <code>sum</code>, <code>max</code>, <code>min</code>,
+  <code>math.prod</code>, <code>any</code> and <code>all</code> are all reductions. The
+  <code>operator</code> module provides named versions of the operators, e.g.
+  <code>reduce(operator.mul, nums)</code>.
+</p>
+</details>
+
+<details>
+<summary>13. SymPy: isprime</summary>
+<p>
+  SymPy is a library for symbolic mathematics. Its <code>isprime</code> function tells you whether
+  an integer is a prime number (a whole number greater than 1 whose only divisors are 1 and
+  itself). It returns <code>True</code> or <code>False</code> and is fast even for very large numbers.
+</p>
+<pre>from sympy import isprime
+
+isprime(7)      # True
+isprime(8)      # False
+isprime(1)      # False  (1 is not prime)
+isprime(2)      # True   (2 is the only even prime)</pre>
+<p>
+  Because it returns a boolean, <code>isprime</code> fits naturally into an <code>if</code> statement
+  or the condition of a comprehension.
+</p>
+<pre>[n for n in [10, 11, 12, 13] if isprime(n)]   # [11, 13]</pre>
+</details>
+
+<details>
+<summary>14. Errors and how to read them</summary>
+<p>
+  When something goes wrong, Python stops and prints a <em>traceback</em>. Read it from the bottom
+  up: the last line names the kind of error and gives a short message, and the lines above show
+  where in your program it happened, with the line number.
+</p>
+<table>
+<tr><td><code>SyntaxError</code>, <code>IndentationError</code></td><td>The code is not valid Python: look for a missing colon, bracket or quote, or inconsistent indentation.</td></tr>
+<tr><td><code>NameError</code></td><td>A variable or function name is misspelled or used before it is defined.</td></tr>
+<tr><td><code>TypeError</code></td><td>An operation got the wrong kind of value, e.g. <code>"a" + 1</code>; convert with <code>str</code> or <code>int</code>.</td></tr>
+<tr><td><code>ValueError</code></td><td>The right type but an unusable value, e.g. <code>int("abc")</code>.</td></tr>
+<tr><td><code>IndexError</code></td><td>A list or string position past the end; remember indexes start at 0.</td></tr>
+<tr><td><code>KeyError</code></td><td>A dictionary key that is not present; use <code>in</code> or <code>.get</code>.</td></tr>
+<tr><td><code>ZeroDivisionError</code></td><td>Division or <code>%</code> by zero.</td></tr>
+<tr><td><code>FileNotFoundError</code></td><td>The file name is wrong or the file is not in the current directory.</td></tr>
+</table>
+<p>
+  You can handle an error you expect instead of letting the program stop, by putting the risky code
+  in a <code>try</code> block and saying what to do in an <code>except</code> block.
+</p>
+<pre>try:
+    value = int(text)
+except ValueError:
+    value = 0</pre>
+</details>
+</div>
+</pl-question-panel>
